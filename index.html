@@ -66,16 +66,17 @@ function sofar_parse_data(res)
     $("#pv_power").html(v[2] + "&nbsp;W");
     $("#pv_production").html(v[1] + "&nbsp;kWh");
 
-    sofar_graph(rows);
+    var today = new Date(v[0]*1000);
+    sofar_graph(rows, today);
 }
 
-function sofar_init_graph(pv_data)
+function sofar_init_graph(pv_data, pv_datetime)
 {
     new Chart("pv_graph", {
         type: "line",
         data: {
             datasets: [{
-                label: "Teho kW",
+                label: "Teho kW | " + pv_datetime,
                 data: pv_data,
                 fill: false,
                 borderColor: "orange",
@@ -85,15 +86,28 @@ function sofar_init_graph(pv_data)
             }]
         },
         options: {
-            locale: "en-us",
             animation: false,
             responsive: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return " " + context.parsed.y + " kW";
+                        }
+                    }
+                }
+            },
             scales: {
                 y: {
                     beginAtZero: true,
                     grid: {
                         drawBorder: false
                     },
+                    ticks: {
+                        callback: function(val) {
+                            return val.toFixed(1);
+                        }
+                    }
                 },
                 x: {
                     type: "time",
@@ -109,10 +123,10 @@ function sofar_init_graph(pv_data)
     });
 }
 
-function sofar_graph(rows)
+function sofar_graph(rows, today)
 {
     var pv_data = [];
-    var today = new Date();
+    var pv_datetime = today.toLocaleString("no");
     today.setHours(0, 0, 0, 0);
 
     for (var v of rows) {
@@ -126,7 +140,7 @@ function sofar_graph(rows)
         }
     }
 
-    sofar_init_graph(pv_data);
+    sofar_init_graph(pv_data, pv_datetime);
 }
 
 </script>

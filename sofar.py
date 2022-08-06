@@ -27,9 +27,9 @@ def sofar_sniffer(ip, iface, log_file=None, cap_file=None, dump_cmd=None):
         cmd = dump_cmd
     else:
         if cap_file:
-            cmd = "tcpdump -i {} -U --print -w {} -x tcp and src {}".format(iface, cap_file, ip)
+            cmd = "tcpdump -i {} -U --print -w {} -x tcp and src {} and dst port 10000".format(iface, cap_file, ip)
         else:
-            cmd = "tcpdump -i {} -x tcp and src {}".format(iface, ip)
+            cmd = "tcpdump -i {} -x tcp and src {} and dst port 10000".format(iface, ip)
 
     logging.info("command: {}".format(cmd))
     p = pexpect.spawnu(cmd, timeout=None)
