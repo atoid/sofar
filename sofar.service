@@ -1,0 +1,12 @@
+[Unit]
+Description=Sofar inverter logging sniffer
+After=systemd-networkd-wait-online.service
+Requires=systemd-networkd-wait-online.service
+
+[Service]
+WorkingDirectory=/home/pi/sofar
+#ExecStart=python3 sofar.py -w sofar.csv -d sofar.cap
+ExecStart=python3 sofar.py -w sofar.csv
+
+[Install]
+WantedBy=multi-user.target
